@@ -1,0 +1,29 @@
+{
+  "name": "stack_mern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Inciando la aplicacion\" && node src/index.js",
+    "dev": "echo \"Inciando la aplicacion\" && nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ferbaeza/stack_MERN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ferbaeza/stack_MERN/issues"
+  },
+  "homepage": "https://github.com/ferbaeza/stack_MERN#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.4.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
