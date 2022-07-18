@@ -6,7 +6,8 @@
   "scripts": {
     "start": "echo \"Inciando la aplicacion\" && node src/index.js",
     "dev": "echo \"Inciando la aplicacion con NodeMon en modo desarrollo\" && nodemon src/index.js",
-    "webpack": "webpack --mode development"
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch"
   },
   "repository": {
     "type": "git",
