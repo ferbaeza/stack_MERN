@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const DB_URI = require('./settings/atlas_settings');
 
-//console.log(DB_URI);
-
-
 /**
  * Conexion MongoDB Atlas
  */

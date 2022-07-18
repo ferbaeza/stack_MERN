@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const path = require('path');
-
+require ('dotenv').config();
 const dbConnect = require('./database')
 
 
@@ -36,3 +36,4 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.listen(app.get('port'), ()=>{
     console.log(`Servidor arrancado en puerto ${app.get('port')}`)
 })
+dbConnect();

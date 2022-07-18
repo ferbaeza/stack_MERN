@@ -1,10 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 
-router.get('/', (req,res)=>{
-    res.json(
-        {response:"Hello fer"
-    });
-});
+const PATH_ROUTES=  __dirname;
 
-module.exports = router;
+const removeExtension=(fileName)=>{
+    return fileName.split('.').shift()
+};
+
+
+
+fs.readdirSync(PATH_ROUTES).filter((file)=>{
+    const name = removeExtension(file)
+    if (name !== 'index'){
+        console.log(`Cargando las rutas de ${name}`)
+        router.use(`/${name}`, require(`./${file}`))
+    }
+})
+
+module.exports = router
