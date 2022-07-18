@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const path = require('path');
 require ('dotenv').config();
-const dbConnect = require('./database')
+const dbConnect = require('./settings/database')
 
 
 //Settings
