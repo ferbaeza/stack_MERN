@@ -22,6 +22,26 @@ class App extends Component {
 
   addTask(e) {
     e.preventDefault();
+    if(this.state._id){
+        fetch(`/api/updatetask/${this.state._id}`,{
+            method:"PUT",
+            body: JSON.stringify({
+                title: this.state.title,
+                description: this.state.description
+            }),
+            headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            },
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            window.M.toast({html: "Tarea actualizada correctamente"});
+            this.setState({title:'', description:'', _id:''});
+            this.fetchTasks();
+        })
+
+    }else{
     fetch("/api/newtask", {
       method: "POST",
       body: JSON.stringify(this.state),
@@ -39,6 +59,7 @@ class App extends Component {
       })
       .catch((err) => console.error(err))
   }
+}
 
   deleteTask(id) {
     console.log(`La tarea es la ${id}`);
@@ -58,8 +79,20 @@ class App extends Component {
       });
   }
 
-  editTask(id) {
+  editTask(id){
     console.log(`La tarea es la ${id}`);
+    fetch(`/api/gettaskbyid/${id}`)
+    .then(res=>res.json())
+    .then(data=>{
+        console.log(data);
+        this.setState({
+            title:data.data.title,
+            description:data.data.description,
+            _id:data.data._id
+        })
+
+    })
+
   }
 
   fetchTasks() {
@@ -103,8 +136,8 @@ class App extends Component {
                           onChange={this.handleChange}
                           value={this.state.title}
                           type="text"
+                          placeholder="Titulo"
                           />
-                        <label for="titulo">Titulo</label>
 
                       </div>
                     </div>
@@ -116,8 +149,9 @@ class App extends Component {
                           value={this.state.description}
                           onChange={this.handleChange}
                           className="materialize-textarea"
+                          placeholder="Descripcion de la Tarea"
+
                         ></textarea>
-                            <label for="descripcion">Descripcion</label>
                       </div>
                     </div>
                     <div className="row">
