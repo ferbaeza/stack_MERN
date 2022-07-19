@@ -21,55 +21,49 @@ class App extends Component {
   }
 
   addTask(e) {
-    //console.log(this.state);
     e.preventDefault();
-    fetch(URL+'newtask',{
-        method: 'POST',
-        body: JSON.stringify(this.state),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
+    fetch("/api/newtask", {
+      method: "POST",
+      body: JSON.stringify(this.state),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        window.M.toast({ html: `${this.state.title} guardada correctamente` });
+        this.setState({ title: "", description: "" })
+        this.fetchTasks();
       })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          window.M.toast({html: `Tarea ${this.state.title} guardada`});
-          this.setState({title: '', description: ''});
-          this.fetchTasks();
-        })
-        .catch(err => console.error(err));
-    }
+      .catch((err) => console.error(err))
+  }
 
-    deleteTask(id){
-        console.log(`La tarea es la ${id}`)
-        console.log(`${URL}deletetask/${id}`)
-    }
-    
-    editTask(id){
-        console.log(`La tarea es la ${id}`)
+  deleteTask(id) {
+    console.log(`La tarea es la ${id}`);
+    console.log(`/api/deletetask/${id}`);
+    fetch(`/api/deletetask/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        M.toast({ html: `Tarea eliminada correctamente` });
+        this.fetchTasks();
+      });
+  }
 
-    }
-    // deleteTask(id){
-    //     fetch(URL+'deletetask/'+id,{
-    //         method: 'DELETE',
-    //         headers: {
-    //           'Accept': 'application/json',
-    //           'Content-Type': 'application/json'
-    //         }
-    //       })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //           console.log(data);
-    //           M.toast({html: 'Task deleted'});
-    //           this.fetchTasks();
-    //         });
-    //     }
-    //   }
-  
+  editTask(id) {
+    console.log(`La tarea es la ${id}`);
+  }
 
   fetchTasks() {
-    fetch(URL + "gettask")
+    fetch("/api/gettask")
       .then((res) => res.json())
       .then((data) => {
         this.setState({ tasks: data.data });
@@ -87,39 +81,43 @@ class App extends Component {
         <nav className="cyan darken-4">
           <div class="nav-wrapper ">
             <a href="/" class="center brand-logo">
-              Logo
+              Simple ToDo App
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li>
-                <a href="/">Home</a>
-              </li>
             </ul>
           </div>
         </nav>
-        <div className="container">
-          <div className="row">
+        
+        <div className="container m4" >
+          <div className="row" >
             <div className="col s5">
               <div className="card">
                 <div className="card-content">
                   <form onSubmit={this.addTask}>
                     <div className="row">
-                      <div className="input-field col s12">
+                        <div className="input-field col s12">
                         <input
+                          id="titulo"
+                          class="input-field"
                           name="title"
                           onChange={this.handleChange}
+                          value={this.state.title}
                           type="text"
-                          placeholder="Titulo"
-                        />
+                          />
+                        <label for="titulo">Titulo</label>
+
                       </div>
                     </div>
                     <div className="row">
                       <div className="input-field col s12">
                         <textarea
+                          id="descripcion"
                           name="description"
+                          value={this.state.description}
                           onChange={this.handleChange}
-                          placeholder="Descripcion"
                           className="materialize-textarea"
                         ></textarea>
+                            <label for="descripcion">Descripcion</label>
                       </div>
                     </div>
                     <div className="row">
@@ -132,36 +130,44 @@ class App extends Component {
                 </div>
               </div>
             </div>
+            <div className="col s7">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.tasks.map((task) => {
+                  return (
+                    <tr key={task._id}>
+                      <td>{task.title}</td>
+                      <td>{task.description}</td>
+                      <td>
+                        <button
+                          onClick={() => this.deleteTask(task._id)}
+                          className="btn red darken-4"
+                        >
+                          <i className="material-icons">delete</i>
+                        </button>
+                        <button
+                          onClick={() => this.editTask(task._id)}
+                          className="btn yellow lighten-1"
+                          style={{ margin: "4px" }}
+                        >
+                          <i className="material-icons">edit</i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            </div>
           </div>
           <div>
-          <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  { 
-                    this.state.tasks.map(task => {
-                      return (
-                        <tr key={task._id}>
-                          <td>{task.title}</td>
-                          <td>{task.description}</td>
-                          <td>
-                            <button onClick={() => this.deleteTask(task._id)} className="btn red darken-4">
-                              <i className="material-icons">delete</i> 
-                            </button>
-                            <button onClick={() => this.editTask(task._id)} className="btn yellow lighten-1" style={{margin: '4px'}}>
-                              <i className="material-icons">edit</i>
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  }
-                </tbody>
-              </table>
+            
           </div>
         </div>
       </div>
@@ -170,3 +176,38 @@ class App extends Component {
 }
 
 export default App;
+/**
+ * <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.tasks.map((task) => {
+                  return (
+                    <tr key={task._id}>
+                      <td>{task.title}</td>
+                      <td>{task.description}</td>
+                      <td>
+                        <button
+                          onClick={() => this.deleteTask(task._id)}
+                          className="btn red darken-4"
+                        >
+                          <i className="material-icons">delete</i>
+                        </button>
+                        <button
+                          onClick={() => this.editTask(task._id)}
+                          className="btn yellow lighten-1"
+                          style={{ margin: "4px" }}
+                        >
+                          <i className="material-icons">edit</i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+ */
